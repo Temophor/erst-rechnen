@@ -1,0 +1,20 @@
+{
+  "annahmen": {
+    "neupreis": 32000.0,
+    "leasing_rate": 299.0,
+    "jahre": 10,
+    "wertverlust_3j": 0.37,
+    "gebraucht_kaufpreis": 20160.0,
+    "opp_zins": 0.0184
+  },
+  "dauerleasing_10j": 48146.67,
+  "neukauf_10j": 33362.33,
+  "gebraucht_10j": 23641.52,
+  "leasing_vs_gebraucht": 24505.15,
+  "neukauf_vs_gebraucht": 9720.81,
+  "monatskosten": {
+    "leasing": 401.22,
+    "neukauf": 278.02,
+    "gebraucht": 197.01
+  }
+}

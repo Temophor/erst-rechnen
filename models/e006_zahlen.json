@@ -1,0 +1,48 @@
+{
+  "annahmen": {
+    "preis": 300000.0,
+    "nebenkosten": 30000.0,
+    "ek": 60000.0,
+    "zins": 0.036,
+    "tilgung": 0.02,
+    "miete_jahr": 10500.0,
+    "steuersatz": 0.42,
+    "etf_rendite": 0.065
+  },
+  "szenarien": {
+    "g_0%": {
+      "wertsteigerung": 0.0,
+      "zuschuesse_gesamt": 178841.15,
+      "restschuld_ende": 0.0,
+      "immo_endvermoegen": 306336.84,
+      "etf_endvermoegen": 785479.11,
+      "vorteil_immo": -479142.27
+    },
+    "g_1%": {
+      "wertsteigerung": 0.01,
+      "zuschuesse_gesamt": 178841.15,
+      "restschuld_ende": 0.0,
+      "immo_endvermoegen": 410691.51,
+      "etf_endvermoegen": 785479.11,
+      "vorteil_immo": -374787.6
+    },
+    "g_2%": {
+      "wertsteigerung": 0.02,
+      "zuschuesse_gesamt": 178841.15,
+      "restschuld_ende": 0.0,
+      "immo_endvermoegen": 549745.32,
+      "etf_endvermoegen": 785479.11,
+      "vorteil_immo": -235733.79
+    },
+    "g_3%": {
+      "wertsteigerung": 0.03,
+      "zuschuesse_gesamt": 178841.15,
+      "restschuld_ende": 0.0,
+      "immo_endvermoegen": 734515.58,
+      "etf_endvermoegen": 785479.11,
+      "vorteil_immo": -50963.53
+    }
+  },
+  "kipppunkt_wertsteigerung": 0.0323,
+  "sanierungsschock_bei_2pz": -350858.31
+}

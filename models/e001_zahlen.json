@@ -1,0 +1,58 @@
+{
+  "params": {
+    "einmalbetrag": 10000.0,
+    "jahre": 12,
+    "sollzins": 0.036,
+    "etf_rendite": 0.065,
+    "basiszins": 0.032,
+    "teilfreistellung": 0.3,
+    "abgeltungsteuer": 0.26375
+  },
+  "sondertilgung_endwert": 15393.39,
+  "etf": {
+    "wert_vor_verkaufssteuer": 20319.76,
+    "vap_summe": 3797.99,
+    "vap_steuern": 701.2,
+    "verkaufssteuer": 1204.08,
+    "endwert_netto": 19115.68,
+    "steuern_gesamt": 1905.29
+  },
+  "etf_vorsprung_netto": 3722.28,
+  "kipppunkt_rendite_vor_steuern": 0.0433,
+  "kipppunkt_altkredit_1_2_prozent": 0.0148,
+  "sensitivitaet": [
+    {
+      "sollzins": 0.012,
+      "kipppunkt": 0.0148,
+      "gewinner_bei_erwartung": "ETF"
+    },
+    {
+      "sollzins": 0.02,
+      "kipppunkt": 0.02432,
+      "gewinner_bei_erwartung": "ETF"
+    },
+    {
+      "sollzins": 0.028,
+      "kipppunkt": 0.03363,
+      "gewinner_bei_erwartung": "ETF"
+    },
+    {
+      "sollzins": 0.036,
+      "kipppunkt": 0.0433,
+      "gewinner_bei_erwartung": "ETF"
+    },
+    {
+      "sollzins": 0.044,
+      "kipppunkt": 0.05291,
+      "gewinner_bei_erwartung": "ETF"
+    }
+  ],
+  "monte_carlo": {
+    "p10": 9962.1339,
+    "p25": 12964.5557,
+    "p50": 17259.9485,
+    "p75": 23270.498,
+    "p90": 30393.0071,
+    "verlust_wahrscheinlichkeit_vs_sondertilgung": 0.3943
+  }
+}

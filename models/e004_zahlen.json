@@ -1,0 +1,17 @@
+{
+  "annahmen": {
+    "rentenwert": 42.52,
+    "ep_mit_63": 45.0,
+    "monate_vorgezogen": 48,
+    "abschlag_gesamt": 0.14400000000000002,
+    "ep_pro_jahr_weiterarbeit": 1.0
+  },
+  "rente_63": 1637.87,
+  "rente_67": 2083.48,
+  "vorsprung_mit_67_aufzuholen": 78617.76,
+  "monatsluecke": 445.61,
+  "break_even_alter": 81.8,
+  "abschlag_euro_monat": 275.53,
+  "abschlag_euro_lebenslang_pro_jahr": 3306.36,
+  "lebenserwartung_hinweis": "Mann ~82, Frau ~85 (im Video als Spanne)"
+}

@@ -1,0 +1,43 @@
+{
+  "annahmen": {
+    "brutto_a": 58000.0,
+    "brutto_b": 32000.0,
+    "elterngeld_satz": 0.65,
+    "bezugsmonate": 12,
+    "sv_pauschal": 0.21,
+    "hinweis": "LSt-Naeherung §39b, ohne Soli/KiSt"
+  },
+  "kombi_4_4": {
+    "netto_monat_gesamt": 4403.62,
+    "netto_a": 2695.95,
+    "netto_b": 1707.67,
+    "lohnsteuer_jahr": 18256.49,
+    "veranlagte_est": 17671.42,
+    "erstattung": 585.07
+  },
+  "kombi_3_5": {
+    "netto_monat_gesamt": 4498.54,
+    "netto_a": 3162.18,
+    "netto_b": 1336.36,
+    "lohnsteuer_jahr": 17117.5,
+    "veranlagte_est": 17671.42,
+    "erstattung": -553.92
+  },
+  "kombi_5_3": {
+    "netto_monat_gesamt": 3990.19,
+    "netto_a": 1989.07,
+    "netto_b": 2001.12,
+    "lohnsteuer_jahr": 23217.64,
+    "veranlagte_est": 17671.42,
+    "erstattung": 5546.22
+  },
+  "monats_plus_durch_3_5": 94.92,
+  "nachzahlung_bei_3_5": 553.92,
+  "jahressteuer_identisch": true,
+  "elterngeld_jan_je_klasse": {
+    "klasse_3": 1300.73,
+    "klasse_4": 1109.99,
+    "klasse_5": 868.63
+  },
+  "elterngeld_hebel_12_monate": 5185.2
+}
