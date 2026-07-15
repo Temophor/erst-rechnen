@@ -1,0 +1,31 @@
+{
+  "annahmen": {
+    "kwp": 10.0,
+    "pv_invest": 14000.0,
+    "speicher_invest": 5500.0,
+    "strompreis": 0.37,
+    "einspeisung": 0.078,
+    "verbrauch": 4500.0,
+    "ev_ohne": 0.3,
+    "ev_mit": 0.6
+  },
+  "ohne_speicher": {
+    "invest": 14000.0,
+    "ertrag_jahr_1": 995.2,
+    "gewinn_20j": 5220.73,
+    "amortisation_jahre": 15
+  },
+  "mit_speicher": {
+    "invest": 19500.0,
+    "ertrag_jahr_1": 1334.4,
+    "gewinn_20j": 3543.19,
+    "amortisation_jahre": 15
+  },
+  "speicher_isoliert": {
+    "mehrertrag_jahr": 394.2,
+    "amortisation_speicher_jahre": 14.0,
+    "speicher_lebensdauer": 13,
+    "kipppunkt_speicherpreis": 5124.6,
+    "aktueller_speicherpreis": 5500.0
+  }
+}

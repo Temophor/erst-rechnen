@@ -24,6 +24,7 @@ Jede Datei enthält einen Selbsttest (`_selbsttest()`), der beim Ausführen auto
 | E004 — Rente mit 63 | `models/e004_rente63.py` | Break-even 81,8 Jahre |
 | E005 — Leasing, Neuwagen oder Gebraucht? | `models/e005_auto_dreieck.py` | dein Neuwagen-Bedürfnis |
 | E006 — Wohnung oder ETF? | `models/e006_immo_vs_etf.py` | 3,2 % Wertsteigerung/Jahr |
+| E007 — PV-Anlage: mit Speicher, ohne, oder gar nicht? | `models/e007_pv.py` | 5.100 € Speicherpreis (Grenzbetrachtung) |
 
 `models/steuer_2026.py` ist ein gemeinsames Hilfsmodul (Einkommensteuertarif 2026 nach § 32a EStG, Lohnsteuerklassen-Näherung nach § 39b), das von E002 verwendet wird.
 
