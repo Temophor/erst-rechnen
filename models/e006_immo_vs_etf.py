@@ -114,4 +114,29 @@ if __name__ == "__main__":
     z = zahlen()
     Path(__file__).with_name("e006_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
-    print(json.dumps(z, indent=2, ensure_ascii=False))
+
+    s2 = z["szenarien"]["g_2%"]
+    print(f"""
+{'=' * 64}
+E006 -- Vermietete Wohnung oder ETF? (30 Jahre, faires Cashflow-Matching)
+{'=' * 64}
+
+Deine Annahmen (Konstanten oben in der Datei aendern fuer deine Situation):
+  Kaufpreis:      {PREIS:,.0f} EUR
+  Eigenkapital:   {EK:,.0f} EUR
+  Zins / Tilgung: {ZINS:.1%} / {TILGUNG:.1%}
+  Kaltmiete p.a.: {MIETE_JAHR:,.0f} EUR
+  ETF-Rendite:    {ETF_RENDITE:.1%}
+
+Ergebnis bei 2 % jaehrlicher Wertsteigerung:
+  Zuschuesse noetig (Cashflow-Deckung): {s2['zuschuesse_gesamt']:,.0f} EUR ueber 30 Jahre
+  Endvermoegen Wohnung: {s2['immo_endvermoegen']:,.0f} EUR
+  Endvermoegen ETF:     {s2['etf_endvermoegen']:,.0f} EUR
+  Vorteil Wohnung:      {s2['vorteil_immo']:+,.0f} EUR
+
+  -> Kipppunkt: Ab {z['kipppunkt_wertsteigerung']:.1%} Wertsteigerung pro Jahr schlaegt
+     die Wohnung den ETF.
+
+Vollstaendige Rohdaten (auch in e006_zahlen.json):
+{json.dumps(z, indent=2, ensure_ascii=False)}
+""")

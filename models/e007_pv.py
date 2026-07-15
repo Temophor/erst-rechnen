@@ -93,4 +93,28 @@ if __name__ == "__main__":
     z = zahlen()
     Path(__file__).with_name("e007_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
-    print(json.dumps(z, indent=2, ensure_ascii=False))
+
+    print(f"""
+{'=' * 64}
+E007 -- PV-Anlage: mit Speicher, ohne, oder gar nicht?
+{'=' * 64}
+
+Deine Annahmen (Konstanten oben in der Datei aendern fuer deine Situation):
+  Anlagengroesse:      {KWP:.0f} kWp
+  PV-Invest:           {PV_INVEST:,.0f} EUR
+  Speicher-Invest:     {SPEICHER_INVEST:,.0f} EUR
+  Strompreis:          {STROMPREIS * 100:.0f} ct/kWh
+  Einspeiseverguetung: {EINSPEISUNG * 100:.1f} ct/kWh
+
+Ergebnis ueber {JAHRE} Jahre:
+  Anlage allein:     {z['ohne_speicher']['gewinn_20j']:,.0f} EUR Gewinn ({z['ohne_speicher']['amortisation_jahre']} Jahre Amortisation)
+  Anlage + Speicher: {z['mit_speicher']['gewinn_20j']:,.0f} EUR Gewinn ({z['mit_speicher']['amortisation_jahre']} Jahre Amortisation)
+
+  -> Der Speicher isoliert betrachtet: {z['speicher_isoliert']['amortisation_speicher_jahre']} Jahre
+     Amortisation bei nur {z['speicher_isoliert']['speicher_lebensdauer']} Jahren Lebensdauer.
+  -> Kipppunkt-Speicherpreis: {z['speicher_isoliert']['kipppunkt_speicherpreis']:,.0f} EUR
+     (aktuell: {z['speicher_isoliert']['aktueller_speicherpreis']:,.0f} EUR)
+
+Vollstaendige Rohdaten (auch in e007_zahlen.json):
+{json.dumps(z, indent=2, ensure_ascii=False)}
+""")

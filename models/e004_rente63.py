@@ -80,4 +80,26 @@ if __name__ == "__main__":
     z = zahlen()
     Path(__file__).with_name("e004_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
-    print(json.dumps(z, indent=2, ensure_ascii=False))
+
+    print(f"""
+{'=' * 64}
+E004 -- Rente mit 63: Wo liegt der Break-even?
+{'=' * 64}
+
+Deine Annahmen (Konstanten oben in der Datei aendern fuer deine Situation):
+  Aktueller Rentenwert:            {RENTENWERT:.2f} EUR
+  Entgeltpunkte mit 63:            {EP_MIT_63}
+  Monate vorgezogen (63 statt 67): {MONATE_VORGEZOGEN}
+  Abschlag pro Monat:              {ABSCHLAG_PRO_MONAT:.1%}
+
+Ergebnis:
+  Rente ab 63 (mit Abschlag):  {z['rente_63']:,.2f} EUR/Monat
+  Rente ab 67 (ohne Abschlag): {z['rente_67']:,.2f} EUR/Monat
+  Monatliche Luecke:           {z['monatsluecke']:,.2f} EUR
+
+  -> Break-even-Alter: {z['break_even_alter']:.1f} Jahre -- erst danach hat der
+     67er-Pfad kumuliert mehr Rente ausgezahlt bekommen als der 63er-Pfad.
+
+Vollstaendige Rohdaten (auch in e004_zahlen.json):
+{json.dumps(z, indent=2, ensure_ascii=False)}
+""")

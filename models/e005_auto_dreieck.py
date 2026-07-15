@@ -81,4 +81,28 @@ if __name__ == "__main__":
     z = zahlen()
     Path(__file__).with_name("e005_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
-    print(json.dumps(z, indent=2, ensure_ascii=False))
+
+    print(f"""
+{'=' * 64}
+E005 -- Leasing, Neuwagen oder Gebrauchtwagen? (10-Jahres-Vollkosten)
+{'=' * 64}
+
+Deine Annahmen (Konstanten oben in der Datei aendern fuer deine Situation):
+  Neupreis:                 {NEUPREIS:,.0f} EUR
+  Leasingrate:              {LEASING_RATE:,.0f} EUR/Monat
+  Laufzeit:                 {JAHRE} Jahre
+  Wertverlust (3 Jahre):    37 %
+  Gebrauchtkaufpreis (3J):  {z['annahmen']['gebraucht_kaufpreis']:,.0f} EUR
+  Opportunitaetszins:       {OPP_ZINS:.2%} (Tagesgeld netto)
+
+Ergebnis ueber {JAHRE} Jahre:
+  Dauerleasing:   {z['dauerleasing_10j']:>10,.0f} EUR  ({z['monatskosten']['leasing']:,.0f} EUR/Monat)
+  Neukauf:        {z['neukauf_10j']:>10,.0f} EUR  ({z['monatskosten']['neukauf']:,.0f} EUR/Monat)
+  Gebrauchtkauf:  {z['gebraucht_10j']:>10,.0f} EUR  ({z['monatskosten']['gebraucht']:,.0f} EUR/Monat)
+
+  -> Der Gebrauchte schlaegt das Dauerleasing um {z['leasing_vs_gebraucht']:,.0f} EUR
+     und den Neukauf um {z['neukauf_vs_gebraucht']:,.0f} EUR -- bei identischer Mobilitaet.
+
+Vollstaendige Rohdaten (auch in e005_zahlen.json):
+{json.dumps(z, indent=2, ensure_ascii=False)}
+""")

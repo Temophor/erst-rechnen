@@ -114,4 +114,30 @@ if __name__ == "__main__":
     z = zahlen()
     Path(__file__).with_name("e003_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
-    print(json.dumps(z, indent=2, ensure_ascii=False))
+
+    s150 = z["szenarien"]["co2_150"]
+    print(f"""
+{'=' * 64}
+E003 -- Waermepumpe oder neue Gasheizung? (20-Jahres-Vollkosten, Barwert)
+{'=' * 64}
+
+Deine Annahmen (Konstanten oben in der Datei aendern fuer deine Situation):
+  Waermepumpe-Invest:   {WP_INVEST:,.0f} EUR (vor Foerderung)
+  Gastherme-Invest:     {GAS_INVEST:,.0f} EUR
+  Foerdersatz:          {FOERDERSATZ:.0%}
+  Jahresarbeitszahl:    {JAZ}
+  Gaspreis:             {GAS_ARBEITSPREIS * 100:.2f} ct/kWh
+  Stromtarif (WP):      {WP_STROMPREIS * 100:.0f} ct/kWh
+  CO2-Preis heute:      {CO2_HEUTE:.0f} EUR/t
+
+Ergebnis (CO2-Pfad Richtung 150 EUR/t bis 2045):
+  Waermepumpe (20 Jahre, Barwert): {s150['barwert_wp']:,.0f} EUR
+  Gasheizung  (20 Jahre, Barwert): {s150['barwert_gas']:,.0f} EUR
+  Vorteil Waermepumpe:             {s150['vorteil_wp']:+,.0f} EUR
+
+  -> Ohne Foerderung kippt das Ergebnis: {z['ohne_foerderung_bei_co2_150']:+,.0f} EUR Vorteil WP.
+  -> Kipppunkt-Foerdersatz (damit die WP gewinnt): {z['kipppunkt_foerdersatz_bei_co2_150']:.0%}
+
+Vollstaendige Rohdaten (auch in e003_zahlen.json):
+{json.dumps(z, indent=2, ensure_ascii=False)}
+""")

@@ -166,4 +166,27 @@ if __name__ == "__main__":
     zahlen = episode_zahlen()
     out = Path(__file__).with_name("e001_zahlen.json")
     out.write_text(json.dumps(zahlen, indent=2, ensure_ascii=False))
-    print(json.dumps(zahlen, indent=2, ensure_ascii=False))
+
+    p = zahlen["params"]
+    print(f"""
+{'=' * 64}
+E001 -- Sondertilgung oder ETF?
+{'=' * 64}
+
+Deine Annahmen (Params-Klasse oben in der Datei aendern fuer deine Situation):
+  Einmalbetrag:          {p['einmalbetrag']:,.0f} EUR
+  Restlaufzeit:          {p['jahre']} Jahre
+  Kreditzins:            {p['sollzins']:.3%} p.a.
+  Erwartete ETF-Rendite: {p['etf_rendite']:.3%} p.a. (vor Steuern)
+
+Ergebnis nach {p['jahre']} Jahren:
+  Sondertilgung (garantiert, steuerfrei): {zahlen['sondertilgung_endwert']:,.0f} EUR
+  ETF (nach allen Steuern):               {zahlen['etf']['endwert_netto']:,.0f} EUR
+  Vorsprung ETF:                          {zahlen['etf_vorsprung_netto']:+,.0f} EUR
+
+  -> Kipppunkt: Ab {zahlen['kipppunkt_rendite_vor_steuern']:.2%} erwarteter ETF-Rendite
+     (vor Steuern) schlaegt der ETF die Sondertilgung.
+
+Vollstaendige Rohdaten (auch in e001_zahlen.json):
+{json.dumps(zahlen, indent=2, ensure_ascii=False)}
+""")

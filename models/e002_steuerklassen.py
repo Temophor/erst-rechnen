@@ -77,4 +77,27 @@ if __name__ == "__main__":
     z = zahlen()
     Path(__file__).with_name("e002_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
-    print(json.dumps(z, indent=2, ensure_ascii=False))
+
+    print(f"""
+{'=' * 64}
+E002 -- Steuerklasse 3/5 oder 4/4?
+{'=' * 64}
+
+Deine Annahmen (Konstanten oben in der Datei aendern fuer deine Situation):
+  Brutto A (Lisa):                    {BRUTTO_A:,.0f} EUR/Jahr
+  Brutto B (Jan, geht in Elternzeit): {BRUTTO_B:,.0f} EUR/Jahr
+  Elterngeld-Satz:                    {ELTERNGELD_SATZ:.0%}
+  Bezugsmonate:                       {BEZUGSMONATE}
+
+Ergebnis:
+  Jahressteuer bei 4/4, 3/5 und 5/3 identisch: {z['jahressteuer_identisch']}
+  3/5 bringt {z['monats_plus_durch_3_5']:,.0f} EUR mehr Netto/Monat -- aber
+    {z['nachzahlung_bei_3_5']:,.0f} EUR Nachzahlung bei der Steuererklaerung
+    (zinsloser Kredit ans Finanzamt, kein Geschenk).
+
+  -> Der eigentliche Hebel ist Elterngeld: waehlt Jan (der pausiert) Klasse 3
+     statt 5, macht das ueber {BEZUGSMONATE} Monate {z['elterngeld_hebel_12_monate']:,.0f} EUR Unterschied.
+
+Vollstaendige Rohdaten (auch in e002_zahlen.json):
+{json.dumps(z, indent=2, ensure_ascii=False)}
+""")
