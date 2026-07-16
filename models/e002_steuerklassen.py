@@ -72,8 +72,32 @@ def _selbsttest():
     assert abs(k["erstattung"]) < 1500                    # 4/4 liegt nah an der Veranlagung
 
 
+def _frage(text: str, standard: float, einheit: str = "", skaliert: bool = False) -> float:
+    """skaliert=True: Eingabe wird durch 100 geteilt (fuer %-Werte)."""
+    anzeige = standard * 100 if skaliert else standard
+    raw = input(f"{text} [{anzeige:g}{einheit}]: ").strip().replace(",", ".")
+    if not raw:
+        return standard
+    wert = float(raw)
+    return wert / 100 if skaliert else wert
+
+
 if __name__ == "__main__":
-    _selbsttest()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--interaktiv", "-i", action="store_true",
+                    help="Fragt nach deinen eigenen Zahlen, statt die Standardwerte zu benutzen.")
+    args = ap.parse_args()
+
+    _selbsttest()  # validiert die Rechenlogik mit den eingebauten Standardwerten
+
+    if args.interaktiv:
+        print("Trag deine eigenen Zahlen ein (Enter = Standardwert uebernehmen).\n")
+        BRUTTO_A = _frage("Bruttojahresgehalt Person A", BRUTTO_A, " EUR")
+        BRUTTO_B = _frage("Bruttojahresgehalt Person B (geht in Elternzeit)", BRUTTO_B, " EUR")
+        BEZUGSMONATE = int(_frage("Elterngeld-Bezugsmonate", BEZUGSMONATE, " Monate"))
+        print()
+
     z = zahlen()
     Path(__file__).with_name("e002_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))

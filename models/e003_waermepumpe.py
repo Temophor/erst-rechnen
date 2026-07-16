@@ -109,8 +109,37 @@ def _selbsttest():
     assert wp_jahreskosten(0) < gas_jahreskosten(0, 60.0)
 
 
+def _frage(text: str, standard: float, einheit: str = "", skaliert: bool = False) -> float:
+    """skaliert=True: Eingabe wird durch 100 geteilt (fuer %- oder Cent-Werte)."""
+    anzeige = standard * 100 if skaliert else standard
+    raw = input(f"{text} [{anzeige:g}{einheit}]: ").strip().replace(",", ".")
+    if not raw:
+        return standard
+    wert = float(raw)
+    return wert / 100 if skaliert else wert
+
+
 if __name__ == "__main__":
-    _selbsttest()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--interaktiv", "-i", action="store_true",
+                    help="Fragt nach deinen eigenen Zahlen, statt die Standardwerte zu benutzen.")
+    args = ap.parse_args()
+
+    _selbsttest()  # validiert die Rechenlogik mit den eingebauten Standardwerten
+
+    if args.interaktiv:
+        print("Trag deine eigenen Zahlen ein (Enter = Standardwert uebernehmen).\n")
+        GAS_KWH = _frage("Jaehrlicher Gasverbrauch", GAS_KWH, " kWh")
+        WAERMEBEDARF = GAS_KWH * 0.95
+        WP_INVEST = _frage("Waermepumpe-Invest (vor Foerderung)", WP_INVEST, " EUR")
+        GAS_INVEST = _frage("Gastherme-Invest", GAS_INVEST, " EUR")
+        FOERDERSATZ = _frage("Foerdersatz", FOERDERSATZ, "%", skaliert=True)
+        JAZ = _frage("Jahresarbeitszahl der Waermepumpe", JAZ)
+        GAS_ARBEITSPREIS = _frage("Gaspreis", GAS_ARBEITSPREIS, " ct/kWh", skaliert=True)
+        WP_STROMPREIS = _frage("Stromtarif fuer die Waermepumpe", WP_STROMPREIS, " ct/kWh", skaliert=True)
+        print()
+
     z = zahlen()
     Path(__file__).with_name("e003_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))

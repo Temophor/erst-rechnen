@@ -162,8 +162,35 @@ def episode_zahlen(p: Params | None = None) -> dict:
     return zahlen
 
 
+def _frage(text: str, standard: float, einheit: str = "", skaliert: bool = False) -> float:
+    """skaliert=True: Eingabe wird durch 100 geteilt (fuer %-Werte)."""
+    anzeige = standard * 100 if skaliert else standard
+    raw = input(f"{text} [{anzeige:g}{einheit}]: ").strip().replace(",", ".")
+    if not raw:
+        return standard
+    wert = float(raw)
+    return wert / 100 if skaliert else wert
+
+
 if __name__ == "__main__":
-    zahlen = episode_zahlen()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--interaktiv", "-i", action="store_true",
+                    help="Fragt nach deinen eigenen Zahlen, statt die Standardwerte zu benutzen.")
+    args = ap.parse_args()
+
+    params = Params()
+    if args.interaktiv:
+        print("Trag deine eigenen Zahlen ein (Enter = Standardwert uebernehmen).\n")
+        params = Params(
+            einmalbetrag=_frage("Einmalbetrag", params.einmalbetrag, " EUR"),
+            jahre=int(_frage("Restlaufzeit", params.jahre, " Jahre")),
+            sollzins=_frage("Kreditzins", params.sollzins, "%", skaliert=True),
+            etf_rendite=_frage("Erwartete ETF-Rendite (vor Steuern)", params.etf_rendite, "%", skaliert=True),
+        )
+        print()
+
+    zahlen = episode_zahlen(params)
     out = Path(__file__).with_name("e001_zahlen.json")
     out.write_text(json.dumps(zahlen, indent=2, ensure_ascii=False))
 

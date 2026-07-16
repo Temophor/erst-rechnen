@@ -109,8 +109,37 @@ def _selbsttest():
     assert simulation(0.02, 2.0)["vorteil_immo"] < s["vorteil_immo"]
 
 
+def _frage(text: str, standard: float, einheit: str = "", skaliert: bool = False) -> float:
+    """skaliert=True: Eingabe wird durch 100 geteilt (fuer %-Werte)."""
+    anzeige = standard * 100 if skaliert else standard
+    raw = input(f"{text} [{anzeige:g}{einheit}]: ").strip().replace(",", ".")
+    if not raw:
+        return standard
+    wert = float(raw)
+    return wert / 100 if skaliert else wert
+
+
 if __name__ == "__main__":
-    _selbsttest()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--interaktiv", "-i", action="store_true",
+                    help="Fragt nach deinen eigenen Zahlen, statt die Standardwerte zu benutzen.")
+    args = ap.parse_args()
+
+    _selbsttest()  # validiert die Rechenlogik mit den eingebauten Standardwerten
+
+    if args.interaktiv:
+        print("Trag deine eigenen Zahlen ein (Enter = Standardwert uebernehmen).\n")
+        PREIS = _frage("Kaufpreis", PREIS, " EUR")
+        NEBENKOSTEN = _frage("Kaufnebenkosten", NEBENKOSTEN, " EUR")
+        EK = _frage("Eigenkapital", EK, " EUR")
+        ZINS = _frage("Kreditzins", ZINS, "%", skaliert=True)
+        TILGUNG = _frage("Anfangstilgung", TILGUNG, "%", skaliert=True)
+        MIETE_JAHR = _frage("Kaltmiete pro Jahr", MIETE_JAHR, " EUR")
+        ETF_RENDITE = _frage("Erwartete ETF-Rendite", ETF_RENDITE, "%", skaliert=True)
+        AFA = 0.02 * (PREIS * 0.70)
+        print()
+
     z = zahlen()
     Path(__file__).with_name("e006_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))

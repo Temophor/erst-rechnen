@@ -76,8 +76,34 @@ def _selbsttest():
     assert wartung(10) > wartung(4) > 0
 
 
+def _frage(text: str, standard: float, einheit: str = "", skaliert: bool = False) -> float:
+    """skaliert=True: Eingabe wird durch 100 geteilt (fuer %-Werte)."""
+    anzeige = standard * 100 if skaliert else standard
+    raw = input(f"{text} [{anzeige:g}{einheit}]: ").strip().replace(",", ".")
+    if not raw:
+        return standard
+    wert = float(raw)
+    return wert / 100 if skaliert else wert
+
+
 if __name__ == "__main__":
-    _selbsttest()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--interaktiv", "-i", action="store_true",
+                    help="Fragt nach deinen eigenen Zahlen, statt die Standardwerte zu benutzen.")
+    args = ap.parse_args()
+
+    _selbsttest()  # validiert die Rechenlogik mit den eingebauten Standardwerten
+
+    if args.interaktiv:
+        print("Trag deine eigenen Zahlen ein (Enter = Standardwert uebernehmen).\n")
+        NEUPREIS = _frage("Neupreis", NEUPREIS, " EUR")
+        LEASING_RATE = _frage("Leasingrate", LEASING_RATE, " EUR/Monat")
+        JAHRE = int(_frage("Vergleichszeitraum", JAHRE, " Jahre"))
+        OPP_ZINS = _frage("Opportunitaetszins (Tagesgeld netto)", OPP_ZINS, "%", skaliert=True)
+        GEBRAUCHT_ALTER = int(_frage("Alter des Gebrauchtwagens beim Kauf", GEBRAUCHT_ALTER, " Jahre"))
+        print()
+
     z = zahlen()
     Path(__file__).with_name("e005_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))

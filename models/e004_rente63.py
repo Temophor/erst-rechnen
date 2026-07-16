@@ -75,8 +75,33 @@ def _selbsttest():
     ABSCHLAG_PRO_MONAT, EP_PRO_JAHR_WEITER = a, e
 
 
+def _frage(text: str, standard: float, einheit: str = "", skaliert: bool = False) -> float:
+    """skaliert=True: Eingabe wird durch 100 geteilt (fuer %-Werte)."""
+    anzeige = standard * 100 if skaliert else standard
+    raw = input(f"{text} [{anzeige:g}{einheit}]: ").strip().replace(",", ".")
+    if not raw:
+        return standard
+    wert = float(raw)
+    return wert / 100 if skaliert else wert
+
+
 if __name__ == "__main__":
-    _selbsttest()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--interaktiv", "-i", action="store_true",
+                    help="Fragt nach deinen eigenen Zahlen, statt die Standardwerte zu benutzen.")
+    args = ap.parse_args()
+
+    _selbsttest()  # validiert die Rechenlogik mit den eingebauten Standardwerten
+
+    if args.interaktiv:
+        print("Trag deine eigenen Zahlen ein (Enter = Standardwert uebernehmen).\n")
+        RENTENWERT = _frage("Aktueller Rentenwert", RENTENWERT, " EUR")
+        EP_MIT_63 = _frage("Deine Entgeltpunkte bei Rentenbeginn mit 63", EP_MIT_63)
+        MONATE_VORGEZOGEN = int(_frage("Monate vorgezogen (z.B. 48 fuer 63 statt 67)", MONATE_VORGEZOGEN, " Monate"))
+        EP_PRO_JAHR_WEITER = _frage("Zusaetzliche Entgeltpunkte pro Jahr Weiterarbeit", EP_PRO_JAHR_WEITER)
+        print()
+
     z = zahlen()
     Path(__file__).with_name("e004_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))

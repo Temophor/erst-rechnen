@@ -6,11 +6,13 @@ Alle Rechenmodelle zum Kanal **[Erstrechnen](https://www.youtube.com/@erstrechne
 
 ## Wie du es benutzt
 
-Jedes Modell ist eine einzelne, abhängigkeitsfreie Python-Datei (nur Standardbibliothek). Konstanten stehen oben in der Datei — ändere sie auf deine eigene Situation und lass das Skript neu laufen:
+Jedes Modell ist eine einzelne, abhängigkeitsfreie Python-Datei (nur Standardbibliothek). Am einfachsten mit dem interaktiven Modus — das Skript fragt dich nach deinen eigenen Zahlen, keine Datei bearbeiten nötig:
 
 ```bash
-python models/e001_sondertilgung_vs_etf.py
+python models/e001_sondertilgung_vs_etf.py --interaktiv
 ```
+
+Bei jeder Frage steht der Standardwert in eckigen Klammern — einfach Enter drücken, um ihn zu übernehmen. Ohne `--interaktiv` (bzw. `-i`) läuft das Skript mit den eingebauten Standardwerten aus der Folge. Konstanten stehen zusätzlich oben in jeder Datei, falls du lieber direkt im Code änderst.
 
 Jede Datei enthält einen Selbsttest (`_selbsttest()`), der beim Ausführen automatisch mitläuft, sowie den kompletten Rechenweg. Die Ergebnisse werden zusätzlich als `eXXX_zahlen.json` neben der Datei abgelegt.
 
