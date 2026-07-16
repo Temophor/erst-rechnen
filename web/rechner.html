@@ -99,32 +99,65 @@
     font-size: 1.18rem; font-weight: 700; color: var(--text); letter-spacing: .02em;
   }
   .nav-minilogo .mini-word .amber { color: var(--amber); }
-  nav[role="tablist"] {
-    display: flex; gap: .35rem; overflow-x: auto; scrollbar-width: none;
-    padding: .2rem 0;
-    flex: 1 1 auto;
+  /* Folgen-Dropdown */
+  .eswitch { position: relative; flex: 0 1 auto; min-width: 0; }
+  .eswitch-btn {
+    display: inline-flex; align-items: center; gap: .55rem;
+    background: var(--tafel); border: 1px solid var(--linie); color: var(--text);
+    padding: .5rem .9rem; border-radius: 10px; font-size: .88rem; font-weight: 600;
+    cursor: pointer; max-width: 100%;
+    transition: border-color .15s;
   }
-  nav[role="tablist"]::-webkit-scrollbar { display: none; }
-  nav button {
-    flex: 0 0 auto;
-    display: inline-flex; align-items: center; gap: .45rem;
-    background: transparent; border: 1px solid transparent; color: var(--dim);
-    padding: .45rem .8rem; border-radius: 999px;
-    font-size: .84rem; font-weight: 500; cursor: pointer; white-space: nowrap;
-    transition: color .15s, border-color .15s, background .15s;
+  .eswitch-btn:hover { border-color: #3a4356; }
+  .eswitch-btn:focus-visible { outline: 2px solid var(--kipp); outline-offset: 2px; }
+  .eswitch-btn .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto;
+    background: var(--pill, var(--dim)); box-shadow: 0 0 8px var(--pill, transparent);
   }
-  nav button .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--pill, var(--dim));
-    opacity: .55; transition: opacity .15s;
+  .eswitch-btn .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .eswitch-btn .chev { color: var(--amber); font-size: .62rem; flex: 0 0 auto; transition: transform .18s; }
+  .eswitch.open .eswitch-btn .chev { transform: rotate(180deg); }
+  .eswitch-panel {
+    position: absolute; top: calc(100% + 8px); left: 0; z-index: 60;
+    min-width: 340px; max-width: min(92vw, 440px);
+    max-height: min(62vh, 500px); overflow-y: auto;
+    background: rgba(19,24,32,.97); border: 1px solid var(--linie); border-radius: 12px;
+    box-shadow: 0 18px 44px rgba(0,0,0,.5);
+    padding: .4rem; display: none;
   }
-  nav button:hover { color: var(--text); border-color: var(--linie); }
-  nav button:focus-visible { outline: 2px solid var(--kipp); outline-offset: 2px; }
-  nav button.active {
-    background: var(--tafel); color: var(--text);
-    border-color: var(--linie); font-weight: 600;
+  .eswitch.open .eswitch-panel { display: block; animation: fade .16s ease; }
+  .eswitch-option {
+    display: flex; align-items: center; gap: .65rem; width: 100%;
+    background: none; border: none; border-radius: 8px; cursor: pointer;
+    padding: .62rem .7rem; font-size: .88rem; text-align: left;
   }
-  nav button.active .dot { opacity: 1; box-shadow: 0 0 8px var(--pill, transparent); }
+  .eswitch-option .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto;
+    background: var(--pill, var(--dim)); opacity: .55;
+  }
+  .eswitch-option .num {
+    flex: 0 0 auto; font-size: .76rem; font-weight: 600; letter-spacing: .05em;
+    color: var(--dim); font-variant-numeric: tabular-nums;
+  }
+  .eswitch-option .t { color: var(--text); opacity: .82; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .eswitch-option:hover, .eswitch-option:focus-visible { background: rgba(42,49,64,.45); outline: none; }
+  .eswitch-option[aria-selected="true"] { background: rgba(42,49,64,.3); }
+  .eswitch-option[aria-selected="true"] .dot { opacity: 1; box-shadow: 0 0 8px var(--pill, transparent); }
+  .eswitch-option[aria-selected="true"] .t { opacity: 1; font-weight: 600; }
+  .eswitch-option[aria-selected="true"]::after {
+    content: "▼"; margin-left: auto; color: var(--amber); font-size: .55rem; flex: 0 0 auto;
+  }
+  /* ‹ › Blättern */
+  .steppers { margin-left: auto; display: flex; gap: .35rem; }
+  .stepbtn {
+    width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+    background: transparent; border: 1px solid var(--linie); color: var(--dim);
+    cursor: pointer; font-size: 1.05rem; line-height: 1; padding-bottom: 2px;
+    transition: color .15s, border-color .15s;
+  }
+  .stepbtn:hover { color: var(--text); border-color: #3a4356; }
+  .stepbtn:focus-visible { outline: 2px solid var(--kipp); outline-offset: 2px; }
+  @media (max-width: 600px) { .nav-minilogo .mini-word { display: none; } }
 
   /* ── Layout ─────────────────────────────────────────────── */
   main { max-width: 1060px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
@@ -360,7 +393,18 @@
       </svg>
       <span class="mini-word">erst <span class="amber">r</span>echnen</span>
     </a>
-    <nav role="tablist" aria-label="Folgen" id="nav"></nav>
+    <div class="eswitch" id="eswitch">
+      <button class="eswitch-btn" id="eswitch-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Folge wählen">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="lbl" id="eswitch-lbl"></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="eswitch-panel" role="listbox" aria-label="Folgen" id="eswitch-panel"></div>
+    </div>
+    <div class="steppers">
+      <button class="stepbtn" id="prev-ep" aria-label="Vorherige Folge" title="Vorherige Folge">‹</button>
+      <button class="stepbtn" id="next-ep" aria-label="Nächste Folge" title="Nächste Folge">›</button>
+    </div>
   </div>
 </div>
 
@@ -1103,44 +1147,77 @@ function buildEpisode(ep) {
   });
 }
 
+let activeIdx = 0;
+
 function showEpisode(id, scroll) {
+  activeIdx = Math.max(0, EPISODES.findIndex((ep) => ep.id === id));
+  const active = EPISODES[activeIdx];
   for (const ep of EPISODES) {
     const on = ep.id === id;
     document.getElementById("sec-" + ep.id).classList.toggle("active", on);
-    const btn = document.getElementById("navbtn-" + ep.id);
-    btn.classList.toggle("active", on);
-    btn.setAttribute("aria-selected", on ? "true" : "false");
+    document.getElementById("navbtn-" + ep.id).setAttribute("aria-selected", on ? "true" : "false");
   }
+  document.getElementById("eswitch-lbl").textContent = active.nav;
+  document.querySelector("#eswitch-btn .dot").style.setProperty("--pill", `var(--${active.pillar})`);
   history.replaceState(null, "", "#" + id);
   if (scroll !== false) window.scrollTo({ top: 0, behavior: "auto" });
 }
 
+function setPanelOpen(open) {
+  const sw = document.getElementById("eswitch");
+  sw.classList.toggle("open", open);
+  document.getElementById("eswitch-btn").setAttribute("aria-expanded", open ? "true" : "false");
+  if (open) {
+    const sel = document.querySelector('#eswitch-panel [aria-selected="true"]');
+    if (sel) sel.focus();
+  }
+}
+
+function stepEpisode(delta) {
+  const next = (activeIdx + delta + EPISODES.length) % EPISODES.length;
+  showEpisode(EPISODES[next].id);
+}
+
 function init() {
-  const nav = document.getElementById("nav");
+  const panel = document.getElementById("eswitch-panel");
+  const btn = document.getElementById("eswitch-btn");
   for (const ep of EPISODES) {
-    const btn = document.createElement("button");
-    btn.id = "navbtn-" + ep.id;
-    btn.setAttribute("role", "tab");
-    btn.style.setProperty("--pill", `var(--${ep.pillar})`);
-    btn.innerHTML = `<span class="dot" aria-hidden="true"></span>${ep.nav}`;
-    btn.title = ep.title;
-    btn.addEventListener("click", () => {
+    const opt = document.createElement("button");
+    opt.id = "navbtn-" + ep.id;
+    opt.className = "eswitch-option";
+    opt.setAttribute("role", "option");
+    opt.style.setProperty("--pill", `var(--${ep.pillar})`);
+    opt.innerHTML = `<span class="dot" aria-hidden="true"></span><span class="num">${ep.nav.split("·")[0].trim()}</span><span class="t">${ep.title}</span>`;
+    opt.addEventListener("click", () => {
       showEpisode(ep.id);
-      btn.scrollIntoView({ block: "nearest", inline: "nearest" });
+      setPanelOpen(false);
+      btn.focus();
     });
-    nav.appendChild(btn);
+    panel.appendChild(opt);
     buildEpisode(ep);
     recalc(ep);
   }
-  // Pfeiltasten in der Nav
-  nav.addEventListener("keydown", (e) => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    const idx = EPISODES.findIndex((ep) => document.getElementById("navbtn-" + ep.id).classList.contains("active"));
-    const next = (idx + (e.key === "ArrowRight" ? 1 : -1) + EPISODES.length) % EPISODES.length;
-    showEpisode(EPISODES[next].id);
-    document.getElementById("navbtn-" + EPISODES[next].id).focus();
-    e.preventDefault();
+  btn.addEventListener("click", () => setPanelOpen(!document.getElementById("eswitch").classList.contains("open")));
+  document.addEventListener("click", (e) => {
+    if (!document.getElementById("eswitch").contains(e.target)) setPanelOpen(false);
   });
+  document.addEventListener("keydown", (e) => {
+    const open = document.getElementById("eswitch").classList.contains("open");
+    if (e.key === "Escape" && open) { setPanelOpen(false); btn.focus(); return; }
+    if (open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      const opts = [...panel.querySelectorAll(".eswitch-option")];
+      const idx = opts.indexOf(document.activeElement);
+      const next = idx < 0 ? 0 : (idx + (e.key === "ArrowDown" ? 1 : -1) + opts.length) % opts.length;
+      opts[next].focus();
+      e.preventDefault();
+    }
+  });
+  btn.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { stepEpisode(1); e.preventDefault(); }
+    if (e.key === "ArrowLeft") { stepEpisode(-1); e.preventDefault(); }
+  });
+  document.getElementById("prev-ep").addEventListener("click", () => stepEpisode(-1));
+  document.getElementById("next-ep").addEventListener("click", () => stepEpisode(1));
   document.getElementById("homelink").addEventListener("click", (e) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
