@@ -4,6 +4,20 @@ Alle Rechenmodelle zum Kanal **[Erstrechnen](https://www.youtube.com/@erstrechne
 
 „Erst rechnen, dann entscheiden."
 
+## Browser-Rechner (empfohlen für die meisten)
+
+Keine Kommandozeile nötig — alle 7 Modelle als Formulare in einer Seite, mit Nav-Leiste zum Wechseln zwischen den Folgen. Die Annahmen-Standardwerte sind vorausgefüllt und direkt überschreibbar, das Ergebnis aktualisiert sich beim Tippen.
+
+```bash
+git clone https://github.com/Temophor/erst-rechnen.git
+cd erst-rechnen
+npm start
+```
+
+Öffnet automatisch `http://localhost:8080/`. Keine Abhängigkeiten (`npm install` ist nicht nötig) — der Server ist ein einzelnes Node-Skript ohne externe Pakete. Alternativ reicht auch, `web/rechner.html` direkt im Browser zu öffnen.
+
+Die Rechenlogik in `web/rechner.html` ist ein 1:1-Port der Python-Modelle unten (gleiche Formeln, gegen die Python-Ausgaben geprüft) — bei Zweifeln zählt aber immer der Python-Code als Referenz.
+
 ## Wie du es benutzt
 
 Jedes Modell ist eine einzelne, abhängigkeitsfreie Python-Datei (nur Standardbibliothek). Am einfachsten mit dem interaktiven Modus — das Skript fragt dich nach deinen eigenen Zahlen, keine Datei bearbeiten nötig:

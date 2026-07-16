@@ -63,9 +63,9 @@ def zahlen() -> dict:
             "gebraucht_10j": gebraucht,
             "leasing_vs_gebraucht": round(lease - gebraucht, 2),
             "neukauf_vs_gebraucht": round(neu - gebraucht, 2),
-            "monatskosten": {"leasing": round(lease / 120, 2),
-                             "neukauf": round(neu / 120, 2),
-                             "gebraucht": round(gebraucht / 120, 2)}}
+            "monatskosten": {"leasing": round(lease / (JAHRE * 12), 2),
+                             "neukauf": round(neu / (JAHRE * 12), 2),
+                             "gebraucht": round(gebraucht / (JAHRE * 12), 2)}}
 
 
 def _selbsttest():

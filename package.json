@@ -1,0 +1,9 @@
+{
+  "name": "erst-rechnen",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Alle Rechenmodelle des Erstrechnen-Kanals zum Selbernachrechnen — inklusive Browser-Rechner.",
+  "scripts": {
+    "start": "node web/serve.js"
+  }
+}

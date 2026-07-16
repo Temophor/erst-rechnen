@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erstrechnen — Die Rechner</title>
+<meta name="description" content="Alle Rechenmodelle des Erstrechnen-Kanals zum Selbernachrechnen — trag deine eigenen Zahlen ein.">
+<style>
+  :root {
+    --bg: #0E1116;
+    --panel: #161B22;
+    --border: #262C36;
+    --text: #E8ECF1;
+    --dim: #8A93A6;
+    --gewinn: #7ED4AD;
+    --verlust: #E8707B;
+    --kipp: #F2C14E;
+    --akzent: #4FC3F7;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  header {
+    padding: 1.4rem 1.5rem 0.6rem; border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #12161d, var(--bg));
+  }
+  header h1 { margin: 0 0 0.2rem; font-size: 1.5rem; letter-spacing: 0.01em; }
+  header h1 .rechnen { color: var(--kipp); }
+  header p.slogan { margin: 0 0 1rem; color: var(--dim); font-size: 0.92rem; }
+  nav {
+    display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.9rem;
+    scrollbar-width: thin;
+  }
+  nav button {
+    flex: 0 0 auto; background: var(--panel); border: 1px solid var(--border); color: var(--dim);
+    padding: 0.5rem 0.9rem; border-radius: 999px; font-size: 0.85rem; cursor: pointer;
+    white-space: nowrap; transition: all 0.15s ease;
+  }
+  nav button:hover { color: var(--text); border-color: var(--akzent); }
+  nav button.active { background: var(--kipp); color: #16130a; border-color: var(--kipp); font-weight: 600; }
+
+  main { max-width: 980px; margin: 0 auto; padding: 1.5rem; }
+  section.episode { display: none; }
+  section.episode.active { display: block; animation: fade 0.2s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .episode h2 { margin: 0 0 0.15rem; font-size: 1.35rem; }
+  .episode p.subtitle { margin: 0 0 1.3rem; color: var(--dim); font-size: 0.95rem; max-width: 68ch; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.9rem; }
+  .field { display: flex; flex-direction: column; gap: 0.3rem; }
+  .field label { font-size: 0.8rem; color: var(--dim); }
+  .field .inputwrap { position: relative; }
+  .field input {
+    width: 100%; background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    padding: 0.55rem 2.6rem 0.55rem 0.7rem; border-radius: 8px; font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .field input:focus { outline: none; border-color: var(--akzent); }
+  .field .unit {
+    position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%);
+    color: var(--dim); font-size: 0.78rem; pointer-events: none;
+  }
+
+  .actions { margin: 1.3rem 0; display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+  button.primary {
+    background: var(--kipp); color: #16130a; border: none; padding: 0.65rem 1.3rem;
+    border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer;
+  }
+  button.primary:hover { filter: brightness(1.08); }
+  button.reset {
+    background: none; border: 1px solid var(--border); color: var(--dim);
+    padding: 0.65rem 1.1rem; border-radius: 8px; font-size: 0.88rem; cursor: pointer;
+  }
+  button.reset:hover { color: var(--text); border-color: var(--dim); }
+  .live-note { color: var(--dim); font-size: 0.8rem; }
+
+  .result { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.3rem; }
+  .result dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 0.45rem 1rem; }
+  .result dt { color: var(--dim); font-size: 0.88rem; align-self: center; }
+  .result dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .result dd.gewinn { color: var(--gewinn); }
+  .result dd.verlust { color: var(--verlust); }
+  .result hr { border: none; border-top: 1px solid var(--border); margin: 0.7rem 0; }
+
+  .kipp-box {
+    margin-top: 1rem; background: rgba(242, 193, 78, 0.08); border: 1px solid rgba(242, 193, 78, 0.35);
+    border-radius: 10px; padding: 0.85rem 1rem; color: var(--kipp); font-size: 0.93rem; line-height: 1.5;
+  }
+  .kipp-box b { color: var(--kipp); }
+
+  details.raw { margin-top: 1rem; color: var(--dim); font-size: 0.82rem; }
+  details.raw summary { cursor: pointer; }
+  details.raw pre {
+    background: #0a0d12; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem;
+    overflow-x: auto; font-size: 0.78rem; color: var(--dim); margin-top: 0.6rem;
+  }
+
+  footer {
+    max-width: 980px; margin: 2rem auto 3rem; padding: 0 1.5rem; color: var(--dim); font-size: 0.82rem;
+    line-height: 1.6; border-top: 1px solid var(--border); padding-top: 1.2rem;
+  }
+  footer a { color: var(--akzent); }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #F7F8FA; --panel: #FFFFFF; --border: #E1E4E9; --text: #1B2028; --dim: #6B7280;
+    }
+    nav button.active { color: #16130a; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>erst <span class="rechnen">rechnen</span></h1>
+  <p class="slogan">Alle Modelle des Kanals — trag deine eigenen Zahlen ein, die Annahmen-Standardwerte kannst du überschreiben.</p>
+  <nav id="nav"></nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  Jedes Ergebnis ist eine <b>Beispielrechnung</b> mit offenen Annahmen — keine Steuer-, Rechts-, Energie- oder Anlageberatung.
+  Der komplette Rechenweg (Python, gleiche Formeln wie hier) liegt offen im
+  <a href="https://github.com/Temophor/erst-rechnen" target="_blank" rel="noopener">GitHub-Repo</a>,
+  ebenso wie eine Kommandozeilen-Version jedes Modells (<code>--interaktiv</code>).
+  <br><br>
+  Erst rechnen, dann entscheiden. — ERSTRECHNEN
+</footer>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Rechenmodelle (1:1-Port der .py-Dateien in models/) --
+   siehe dort für Quellen, Annahmen und Selbsttests.
+   ============================================================ */
+
+function round(x, n) {
+  const f = Math.pow(10, n);
+  const scaled = x * f;
+  const nearest = Math.round(scaled);
+  if (Math.abs(scaled - Math.trunc(scaled) - 0.5) < 1e-9) {
+    const floor = Math.floor(scaled);
+    return (floor % 2 === 0 ? floor : floor + 1) / f;
+  }
+  return nearest / f;
+}
+function round2(x) { return round(x, 2); }
+function round1(x) { return round(x, 1); }
+function round4(x) { return round(x, 4); }
+
+const GRUNDFREIBETRAG = 12348;
+function estTarif(zvE) {
+  const x = Math.floor(zvE);
+  if (x <= GRUNDFREIBETRAG) return 0.0;
+  if (x <= 17799) { const y = (x - GRUNDFREIBETRAG) / 10000; return round2((914.51 * y + 1400) * y); }
+  if (x <= 69878) { const z = (x - 17799) / 10000; return round2((173.10 * z + 2397) * z + 1034.87); }
+  if (x <= 277825) return round2(0.42 * x - 11135.63);
+  return round2(0.45 * x - 19470.38);
+}
+function estSplitting(zvEGemeinsam) { return round2(2 * estTarif(zvEGemeinsam / 2)); }
+function lstKlasse(jahresbetrag, klasse) {
+  if (klasse === 1 || klasse === 4) return estTarif(jahresbetrag);
+  if (klasse === 3) return estSplitting(jahresbetrag);
+  if (klasse === 5 || klasse === 6) {
+    const st = 2 * (estTarif(1.25 * jahresbetrag) - estTarif(0.75 * jahresbetrag));
+    return round2(Math.max(st, 0.0));
+  }
+  throw new Error("klasse " + klasse);
+}
+function nettoMonat(bruttoJahr, klasse) {
+  const lst = lstKlasse(bruttoJahr, klasse);
+  return round2((bruttoJahr - lst - bruttoJahr * 0.21) / 12);
+}
+
+function e001(p) {
+  const { einmalbetrag, jahre, sollzins, etfRendite, basiszins, teilfreistellung, abgeltungsteuer } = p;
+  function sondertilgungEndwert() { return einmalbetrag * Math.pow(1 + sollzins / 12, 12 * jahre); }
+  function etfEndwertNetto(rendite) {
+    const r = rendite === undefined ? etfRendite : rendite;
+    const steuersatzEff = (1 - teilfreistellung) * abgeltungsteuer;
+    let wert = einmalbetrag, vapSumme = 0.0, vapSteuern = 0.0;
+    for (let i = 0; i < jahre; i++) {
+      const wertAnfang = wert;
+      const wertEnde = wertAnfang * (1 + r);
+      const jahresgewinn = wertEnde - wertAnfang;
+      const basisertrag = wertAnfang * basiszins * 0.7;
+      const vap = Math.max(0.0, Math.min(basisertrag, jahresgewinn));
+      const steuer = vap * steuersatzEff;
+      wert = wertEnde - steuer;
+      vapSumme += vap; vapSteuern += steuer;
+    }
+    const bruttoGewinn = wert - einmalbetrag;
+    const steuerpflichtig = Math.max(0.0, bruttoGewinn - vapSumme);
+    const verkaufssteuer = steuerpflichtig * steuersatzEff;
+    return { wertVorVerkaufssteuer: wert, vapSumme, vapSteuern, verkaufssteuer, endwertNetto: wert - verkaufssteuer, steuernGesamt: vapSteuern + verkaufssteuer };
+  }
+  function kipppunktRendite() {
+    let lo = 0.0, hi = 0.20;
+    const ziel = sondertilgungEndwert();
+    const f = (r) => etfEndwertNetto(r).endwertNetto - ziel;
+    for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) < 0) lo = mid; else hi = mid; }
+    return (lo + hi) / 2;
+  }
+  const st = sondertilgungEndwert();
+  const etfRaw = etfEndwertNetto();
+  const kp = kipppunktRendite();
+  const etf = {
+    wertVorVerkaufssteuer: round2(etfRaw.wertVorVerkaufssteuer), vapSumme: round2(etfRaw.vapSumme),
+    vapSteuern: round2(etfRaw.vapSteuern), verkaufssteuer: round2(etfRaw.verkaufssteuer),
+    endwertNetto: round2(etfRaw.endwertNetto), steuernGesamt: round2(etfRaw.steuernGesamt),
+  };
+  return { sondertilgungEndwert: round2(st), etf, etfVorsprungNetto: round2(etfRaw.endwertNetto - st), kipppunktRenditeVorSteuern: round4(kp) };
+}
+
+function e002(p) {
+  const { bruttoA, bruttoB, elterngeldSatz, bezugsmonate } = p;
+  const ELTERNGELD_MAX = 1800.0;
+  function kombi(ba, ka, bb, kb) {
+    const nettoA = nettoMonat(ba, ka), nettoB = nettoMonat(bb, kb);
+    const lstSumme = lstKlasse(ba, ka) + lstKlasse(bb, kb);
+    const veranlagt = estSplitting(ba + bb);
+    return { nettoMonatGesamt: round2(nettoA + nettoB), nettoA, nettoB, lohnsteuerJahr: round2(lstSumme), veranlagteEst: veranlagt, erstattung: round2(lstSumme - veranlagt) };
+  }
+  function elterngeldMonat(brutto, klasse) { return round2(Math.min(ELTERNGELD_MAX, elterngeldSatz * nettoMonat(brutto, klasse))); }
+  const k44 = kombi(bruttoA, 4, bruttoB, 4);
+  const k35 = kombi(bruttoA, 3, bruttoB, 5);
+  const k53 = kombi(bruttoA, 5, bruttoB, 3);
+  const eg = { k3: elterngeldMonat(bruttoB, 3), k4: elterngeldMonat(bruttoB, 4), k5: elterngeldMonat(bruttoB, 5) };
+  const egHebel = round2((eg.k3 - eg.k5) * bezugsmonate);
+  const identisch = Math.abs(k44.veranlagteEst - k35.veranlagteEst) < 0.01 && Math.abs(k35.veranlagteEst - k53.veranlagteEst) < 0.01;
+  return { k44, k35, k53, monatsPlusDurch35: round2(k35.nettoMonatGesamt - k44.nettoMonatGesamt), nachzahlungBei35: round2(-k35.erstattung), jahressteuerIdentisch: identisch, elterngeldJeKlasse: eg, elterngeldHebel: egHebel };
+}
+
+function e003(p) {
+  const { wpInvest, gasInvest, foerdersatz, jaz, gasArbeitspreis, wpStrompreis, co2Heute, diskont, jahre, gasKwh } = p;
+  const waermebedarf = gasKwh * 0.95;
+  const FOERDER_DECKEL = 30000.0, CO2_FAKTOR = 0.000201, PREISSTEIGERUNG = 0.01, WARTUNG_GAS = 180.0, WARTUNG_WP = 100.0;
+  function co2Pfad(jahr, ziel2045) { return co2Heute + (ziel2045 - co2Heute) * Math.min(1.0, jahr / 19); }
+  function barwertKosten(invest, jahreskostenFn) {
+    let bw = invest;
+    for (let j = 0; j < jahre; j++) bw += jahreskostenFn(j) / Math.pow(1 + diskont, j + 1);
+    return round2(bw);
+  }
+  function gasJahreskosten(jahr, co2Ziel) {
+    let basis = gasKwh * (gasArbeitspreis - co2Heute * CO2_FAKTOR);
+    basis *= Math.pow(1 + PREISSTEIGERUNG, jahr);
+    const co2 = gasKwh * CO2_FAKTOR * co2Pfad(jahr, co2Ziel);
+    return basis + co2 + WARTUNG_GAS;
+  }
+  function wpJahreskosten(jahr) { return (waermebedarf / jaz) * wpStrompreis * Math.pow(1 + PREISSTEIGERUNG, jahr) + WARTUNG_WP; }
+  function vergleich(co2Ziel, foerdersatzX) {
+    const fs = foerdersatzX === undefined ? foerdersatz : foerdersatzX;
+    const zuschuss = Math.min(wpInvest, FOERDER_DECKEL) * fs;
+    const wp = barwertKosten(wpInvest - zuschuss, wpJahreskosten);
+    const gas = barwertKosten(gasInvest, (j) => gasJahreskosten(j, co2Ziel));
+    return { co2Ziel2045: co2Ziel, foerdersatz: fs, zuschuss: round2(zuschuss), barwertWp: wp, barwertGas: gas, vorteilWp: round2(gas - wp) };
+  }
+  function kipppunktFoerderung(co2Ziel) {
+    let lo = 0.0, hi = 0.70;
+    if (vergleich(co2Ziel, hi).vorteilWp < 0) return NaN;
+    if (vergleich(co2Ziel, lo).vorteilWp > 0) return 0.0;
+    for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (vergleich(co2Ziel, mid).vorteilWp < 0) lo = mid; else hi = mid; }
+    return round4((lo + hi) / 2);
+  }
+  return {
+    szenarien: { co2_60: vergleich(60.0), co2_150: vergleich(150.0), co2_250: vergleich(250.0) },
+    ohneFoerderungBeiCo2150: vergleich(150.0, 0.0).vorteilWp,
+    kipppunktFoerdersatzBeiCo2150: kipppunktFoerderung(150.0),
+  };
+}
+
+function e004(p) {
+  const { rentenwert, epMit63, monateVorgezogen, epProJahrWeiter } = p;
+  const ABSCHLAG_PRO_MONAT = 0.003;
+  function rente63() { return round2(epMit63 * rentenwert * (1 - ABSCHLAG_PRO_MONAT * monateVorgezogen)); }
+  function rente67() { return round2((epMit63 + epProJahrWeiter * (monateVorgezogen / 12)) * rentenwert); }
+  const r63 = rente63(), r67 = rente67();
+  let kum63 = r63 * monateVorgezogen, monate = 0;
+  while (kum63 > 0 && monate < 12 * 40) { kum63 -= (r67 - r63); monate += 1; }
+  const abschlagEuro = round2(epMit63 * rentenwert * ABSCHLAG_PRO_MONAT * monateVorgezogen);
+  return {
+    rente63: r63, rente67: r67, monatsluecke: round2(r67 - r63), breakEvenAlter: round1(67 + monate / 12),
+    abschlagEuroMonat: abschlagEuro, abschlagEuroLebenslangProJahr: round2(abschlagEuro * 12),
+  };
+}
+
+function e005(p) {
+  const { neupreis, leasingRate, jahre, oppZins, gebrauchtAlter } = p;
+  const LEASING_ANZAHLUNG = 990.0, LEASING_UEBERF = 890.0, LEASING_ZYKLUS_JAHRE = 3;
+  function restwert(alterJahre) { return alterJahre <= 3 ? neupreis * (1 - 0.37 * alterJahre / 3) : neupreis * 0.63 * Math.pow(0.91, alterJahre - 3); }
+  function wartung(alter) { return alter <= 3 ? 300.0 : 400.0 + 60.0 * (alter - 3); }
+  function leasingKosten() {
+    const zyklen = jahre / LEASING_ZYKLUS_JAHRE;
+    return round2(leasingRate * 12 * jahre + (LEASING_ANZAHLUNG + LEASING_UEBERF) * zyklen + 300.0 * jahre + 300.0 * jahre);
+  }
+  function kaufKosten(kaufalter) {
+    const kaufpreis = restwert(kaufalter);
+    const rest = restwert(kaufalter + jahre);
+    let wart = 0.0;
+    for (let j = 1; j <= jahre; j++) wart += wartung(kaufalter + j);
+    const kapitalkosten = kaufpreis * (Math.pow(1 + oppZins, jahre) - 1);
+    return round2(kaufpreis - rest + wart + kapitalkosten);
+  }
+  const lease = leasingKosten(), neu = kaufKosten(0), gebraucht = kaufKosten(gebrauchtAlter);
+  return {
+    dauerleasing10j: lease, neukauf10j: neu, gebraucht10j: gebraucht,
+    leasingVsGebraucht: round2(lease - gebraucht), neukaufVsGebraucht: round2(neu - gebraucht),
+    monatskosten: { leasing: round2(lease / (jahre * 12)), neukauf: round2(neu / (jahre * 12)), gebraucht: round2(gebraucht / (jahre * 12)) },
+  };
+}
+
+function e006(p) {
+  const { preis, nebenkosten, ek, zins, tilgung, mieteJahr, steuersatz, etfRendite } = p;
+  const JAHRE = 30, MIETSTEIGERUNG = 0.02, KOSTENQUOTE = 0.20, INSTAND = 2100.0, MIETAUSFALL = 0.02, ETF_ENDSTEUER = 0.1846;
+  const AFA = 0.02 * (preis * 0.70);
+  function etfAbgelten(wert, eingezahlt) { return round2(wert - Math.max(0.0, wert - eingezahlt) * ETF_ENDSTEUER); }
+  function simulation(wertsteigerung, instandFaktor) {
+    const iFaktor = instandFaktor === undefined ? 1.0 : instandFaktor;
+    const darlehen = preis + nebenkosten - ek;
+    const rate = darlehen * (zins + tilgung);
+    let restschuld = darlehen, miete = mieteJahr, instand = INSTAND * iFaktor;
+    let nebentopf = 0.0, nebentopfEinzahlungen = 0.0, etf = ek, etfEinzahlungen = ek, zuschuesse = 0.0, afaJahre = 0;
+    for (let i = 0; i < JAHRE; i++) {
+      const zinsAnteil = restschuld * zins;
+      const einnahmen = miete * (1 - MIETAUSFALL);
+      const kosten = miete * KOSTENQUOTE + instand;
+      const afa = afaJahre < 50 ? AFA : 0.0;
+      const steuer = (einnahmen - kosten - zinsAnteil - afa) * steuersatz;
+      const kreditZahlung = Math.min(rate, restschuld * (1 + zins));
+      const cashflow = einnahmen - kosten - kreditZahlung - steuer;
+      if (cashflow < 0) {
+        zuschuesse += -cashflow; etf = etf * (1 + etfRendite) + (-cashflow); etfEinzahlungen += -cashflow; nebentopf *= (1 + etfRendite);
+      } else {
+        etf *= (1 + etfRendite); nebentopf = nebentopf * (1 + etfRendite) + cashflow; nebentopfEinzahlungen += cashflow;
+      }
+      restschuld = Math.max(0.0, restschuld + zinsAnteil - kreditZahlung);
+      miete *= (1 + MIETSTEIGERUNG); instand *= (1 + MIETSTEIGERUNG); afaJahre += 1;
+    }
+    const immoWert = preis * Math.pow(1 + wertsteigerung, JAHRE);
+    const immoVermoegen = immoWert - restschuld + etfAbgelten(nebentopf, nebentopfEinzahlungen);
+    const etfVermoegen = etfAbgelten(etf, etfEinzahlungen);
+    return { zuschuesseGesamt: round2(zuschuesse), immoEndvermoegen: round2(immoVermoegen), etfEndvermoegen: round2(etfVermoegen), vorteilImmo: round2(immoVermoegen - etfVermoegen) };
+  }
+  function kipppunktWertsteigerung() {
+    let lo = -0.02, hi = 0.08;
+    for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (simulation(mid).vorteilImmo < 0) lo = mid; else hi = mid; }
+    return round4((lo + hi) / 2);
+  }
+  return { g2: simulation(0.02), kipppunktWertsteigerung: kipppunktWertsteigerung() };
+}
+
+function e007(p) {
+  const { kwp, pvInvest, speicherInvest, strompreis, einspeisung, verbrauch, evOhne, evMit } = p;
+  const DEGRADATION = 0.005, ERTRAG_PRO_KWP = 950.0, BETRIEB_QUOTE = 0.01, JAHRE = 20, SPEICHER_LEBENSDAUER = 13;
+  function jahresertrag(mitSpeicher, jahr) {
+    const erzeugung = kwp * ERTRAG_PRO_KWP * Math.pow(1 - DEGRADATION, jahr);
+    const eigen = Math.min(verbrauch * (mitSpeicher ? evMit : evOhne), erzeugung);
+    const invest = pvInvest + (mitSpeicher ? speicherInvest : 0.0);
+    return eigen * strompreis + Math.max(0.0, erzeugung - eigen) * einspeisung - invest * BETRIEB_QUOTE;
+  }
+  function amortisation(mitSpeicher) {
+    const invest = pvInvest + (mitSpeicher ? speicherInvest : 0.0);
+    let kum = 0.0, jahr = 0;
+    while (kum < invest && jahr < 40) { kum += jahresertrag(mitSpeicher, jahr); jahr += 1; }
+    return kum >= invest ? jahr : Infinity;
+  }
+  function gesamt(mitSpeicher) {
+    const invest = pvInvest + (mitSpeicher ? speicherInvest : 0.0);
+    let summe = 0.0;
+    for (let j = 0; j < JAHRE; j++) summe += jahresertrag(mitSpeicher, j);
+    if (mitSpeicher) summe -= speicherInvest * (JAHRE - SPEICHER_LEBENSDAUER) / SPEICHER_LEBENSDAUER;
+    return { gewinn20j: round2(summe - invest), amortisationJahre: amortisation(mitSpeicher) };
+  }
+  const mehrertrag = jahresertrag(true, 0) - jahresertrag(false, 0) + speicherInvest * BETRIEB_QUOTE;
+  return {
+    ohneSpeicher: gesamt(false), mitSpeicher: gesamt(true),
+    kipppunktSpeicherpreis: round2(mehrertrag * SPEICHER_LEBENSDAUER),
+  };
+}
+
+/* ============================================================
+   UI: Episoden-Konfiguration (Felder + Ergebnis-Rendering)
+   ============================================================ */
+
+function euro(x, digits) {
+  if (!isFinite(x)) return "∞";
+  return x.toLocaleString("de-DE", { minimumFractionDigits: digits ?? 0, maximumFractionDigits: digits ?? 0 }) + " €";
+}
+function pct(x, digits) { return x.toLocaleString("de-DE", { minimumFractionDigits: digits ?? 1, maximumFractionDigits: digits ?? 1 }) + " %"; }
+function signClass(x) { return x >= 0 ? "gewinn" : "verlust"; }
+
+const EPISODES = [
+  {
+    id: "e001", nav: "E001", title: "Sondertilgung oder ETF?",
+    subtitle: "10.000 € übrig: sofort den Kredit sondertilgen, oder in einen ETF investieren?",
+    fields: [
+      { key: "einmalbetrag", label: "Einmalbetrag", unit: "€", def: 10000 },
+      { key: "jahre", label: "Restlaufzeit", unit: "Jahre", def: 12, int: true },
+      { key: "sollzins", label: "Kreditzins", unit: "%", def: 3.6, percent: true },
+      { key: "etfRendite", label: "Erwartete ETF-Rendite (vor Steuern)", unit: "%", def: 6.5, percent: true },
+      { key: "basiszins", label: "Basiszins (Vorabpauschale, BMF)", unit: "%", def: 3.2, percent: true },
+      { key: "teilfreistellung", label: "Teilfreistellung Aktienfonds", unit: "%", def: 30, percent: true },
+      { key: "abgeltungsteuer", label: "Abgeltungsteuer inkl. Soli", unit: "%", def: 26.375, percent: true },
+    ],
+    calc: e001,
+    render: (z) => `
+      <dl>
+        <dt>Sondertilgung (garantiert, steuerfrei)</dt><dd>${euro(z.sondertilgungEndwert)}</dd>
+        <dt>ETF (nach allen Steuern)</dt><dd>${euro(z.etf.endwertNetto)}</dd>
+        <hr>
+        <dt>Vorsprung ETF</dt><dd class="${signClass(z.etfVorsprungNetto)}">${z.etfVorsprungNetto >= 0 ? "+" : ""}${euro(z.etfVorsprungNetto)}</dd>
+      </dl>
+      <div class="kipp-box"><b>Kipppunkt:</b> Ab ${pct(z.kipppunktRenditeVorSteuern * 100, 2)} erwarteter ETF-Rendite (vor Steuern) schlägt der ETF die Sondertilgung.</div>
+    `,
+  },
+  {
+    id: "e002", nav: "E002", title: "Steuerklasse 3/5 oder 4/4?",
+    subtitle: "Liquidität vs. echtes Geld — und der Elterngeld-Hebel, den fast niemand kennt.",
+    fields: [
+      { key: "bruttoA", label: "Bruttojahresgehalt Person A", unit: "€", def: 58000 },
+      { key: "bruttoB", label: "Bruttojahresgehalt Person B (geht in Elternzeit)", unit: "€", def: 32000 },
+      { key: "elterngeldSatz", label: "Elterngeld-Satz", unit: "%", def: 65, percent: true },
+      { key: "bezugsmonate", label: "Elterngeld-Bezugsmonate", unit: "Monate", def: 12, int: true },
+    ],
+    calc: e002,
+    render: (z) => `
+      <dl>
+        <dt>Jahressteuer bei 4/4, 3/5, 5/3 identisch</dt><dd>${z.jahressteuerIdentisch ? "Ja" : "Nein"}</dd>
+        <dt>3/5 bringt mehr Netto/Monat</dt><dd class="gewinn">+${euro(z.monatsPlusDurch35)}</dd>
+        <dt>... aber Nachzahlung bei der Steuererklärung</dt><dd class="verlust">${euro(z.nachzahlungBei35)}</dd>
+      </dl>
+      <div class="kipp-box"><b>Der eigentliche Hebel:</b> Wählt der pausierende Partner Steuerklasse 3 statt 5, macht das über die Bezugsmonate ${euro(z.elterngeldHebel)} Unterschied beim Elterngeld.</div>
+    `,
+  },
+  {
+    id: "e003", nav: "E003", title: "Wärmepumpe oder Gas?",
+    subtitle: "20-Jahres-Vollkosten (Barwert) — Bestandshaus, neue Heizung fällig.",
+    fields: [
+      { key: "gasKwh", label: "Jährlicher Gasverbrauch", unit: "kWh", def: 18000 },
+      { key: "wpInvest", label: "Wärmepumpe-Invest (vor Förderung)", unit: "€", def: 28000 },
+      { key: "gasInvest", label: "Gastherme-Invest", unit: "€", def: 11000 },
+      { key: "foerdersatz", label: "Fördersatz", unit: "%", def: 55, percent: true },
+      { key: "jaz", label: "Jahresarbeitszahl der Wärmepumpe", unit: "", def: 3.5 },
+      { key: "gasArbeitspreis", label: "Gaspreis", unit: "ct/kWh", def: 9.31, percent: true },
+      { key: "wpStrompreis", label: "Stromtarif für die Wärmepumpe", unit: "ct/kWh", def: 22, percent: true },
+      { key: "co2Heute", label: "CO₂-Preis heute", unit: "€/t", def: 60 },
+      { key: "diskont", label: "Diskontsatz", unit: "%", def: 3, percent: true },
+      { key: "jahre", label: "Betrachtungszeitraum", unit: "Jahre", def: 20, int: true },
+    ],
+    calc: e003,
+    render: (z) => { const s = z.szenarien.co2_150; return `
+      <dl>
+        <dt>Wärmepumpe (Barwert)</dt><dd>${euro(s.barwertWp)}</dd>
+        <dt>Gasheizung (Barwert)</dt><dd>${euro(s.barwertGas)}</dd>
+        <hr>
+        <dt>Vorteil Wärmepumpe</dt><dd class="${signClass(s.vorteilWp)}">${s.vorteilWp >= 0 ? "+" : ""}${euro(s.vorteilWp)}</dd>
+        <dt>... ganz ohne Förderung</dt><dd class="${signClass(z.ohneFoerderungBeiCo2150)}">${z.ohneFoerderungBeiCo2150 >= 0 ? "+" : ""}${euro(z.ohneFoerderungBeiCo2150)}</dd>
+      </dl>
+      <div class="kipp-box"><b>Kipppunkt:</b> Ab ${pct(z.kipppunktFoerdersatzBeiCo2150 * 100, 0)} Fördersatz gewinnt die Wärmepumpe (bei diesem CO₂-Pfad).</div>
+    `; },
+  },
+  {
+    id: "e004", nav: "E004", title: "Rente mit 63",
+    subtitle: "Wo liegt der Break-even der Abschläge?",
+    fields: [
+      { key: "rentenwert", label: "Aktueller Rentenwert", unit: "€", def: 42.52 },
+      { key: "epMit63", label: "Deine Entgeltpunkte bei Rentenbeginn mit 63", unit: "", def: 45 },
+      { key: "monateVorgezogen", label: "Monate vorgezogen (z.B. 48 für 63 statt 67)", unit: "Monate", def: 48, int: true },
+      { key: "epProJahrWeiter", label: "Zusätzliche Entgeltpunkte pro Jahr Weiterarbeit", unit: "", def: 1.0 },
+    ],
+    calc: e004,
+    render: (z) => `
+      <dl>
+        <dt>Rente ab 63 (mit Abschlag)</dt><dd>${euro(z.rente63, 2)}/Monat</dd>
+        <dt>Rente ab 67 (ohne Abschlag)</dt><dd>${euro(z.rente67, 2)}/Monat</dd>
+        <dt>Monatliche Lücke</dt><dd>${euro(z.monatsluecke, 2)}</dd>
+        <dt>Abschlag lebenslang pro Jahr</dt><dd class="verlust">${euro(z.abschlagEuroLebenslangProJahr)}</dd>
+      </dl>
+      <div class="kipp-box"><b>Break-even-Alter: ${z.breakEvenAlter} Jahre</b> — erst danach hat der spätere Renteneintritt kumuliert mehr ausgezahlt als der frühere.</div>
+    `,
+  },
+  {
+    id: "e005", nav: "E005", title: "Leasing, Neuwagen oder Gebrauchtwagen?",
+    subtitle: "10-Jahres-Vollkosten — was die Rate wirklich kostet.",
+    fields: [
+      { key: "neupreis", label: "Neupreis", unit: "€", def: 32000 },
+      { key: "leasingRate", label: "Leasingrate", unit: "€/Monat", def: 299 },
+      { key: "jahre", label: "Vergleichszeitraum", unit: "Jahre", def: 10, int: true },
+      { key: "oppZins", label: "Opportunitätszins (Tagesgeld netto)", unit: "%", def: 1.84, percent: true },
+      { key: "gebrauchtAlter", label: "Alter des Gebrauchtwagens beim Kauf", unit: "Jahre", def: 3, int: true },
+    ],
+    calc: e005,
+    render: (z) => `
+      <dl>
+        <dt>Dauerleasing</dt><dd>${euro(z.dauerleasing10j)} <span style="color:var(--dim); font-weight:400;">(${euro(z.monatskosten.leasing)}/Mon.)</span></dd>
+        <dt>Neukauf</dt><dd>${euro(z.neukauf10j)} <span style="color:var(--dim); font-weight:400;">(${euro(z.monatskosten.neukauf)}/Mon.)</span></dd>
+        <dt>Gebrauchtkauf</dt><dd>${euro(z.gebraucht10j)} <span style="color:var(--dim); font-weight:400;">(${euro(z.monatskosten.gebraucht)}/Mon.)</span></dd>
+      </dl>
+      <div class="kipp-box">Der Gebrauchte schlägt das Dauerleasing um <b>${euro(z.leasingVsGebraucht)}</b> und den Neukauf um <b>${euro(z.neukaufVsGebraucht)}</b> — bei identischer Mobilität.</div>
+    `,
+  },
+  {
+    id: "e006", nav: "E006", title: "Wohnung oder ETF?",
+    subtitle: "30 Jahre, faires Cashflow-Matching — bei welcher Wertsteigerung gewinnt die Wohnung?",
+    fields: [
+      { key: "preis", label: "Kaufpreis", unit: "€", def: 300000 },
+      { key: "nebenkosten", label: "Kaufnebenkosten", unit: "€", def: 30000 },
+      { key: "ek", label: "Eigenkapital", unit: "€", def: 60000 },
+      { key: "zins", label: "Kreditzins", unit: "%", def: 3.6, percent: true },
+      { key: "tilgung", label: "Anfangstilgung", unit: "%", def: 2, percent: true },
+      { key: "mieteJahr", label: "Kaltmiete pro Jahr", unit: "€", def: 10500 },
+      { key: "steuersatz", label: "Grenzsteuersatz", unit: "%", def: 42, percent: true },
+      { key: "etfRendite", label: "Erwartete ETF-Rendite", unit: "%", def: 6.5, percent: true },
+    ],
+    calc: e006,
+    render: (z) => `
+      <p style="color:var(--dim); font-size:0.85rem; margin-top:0;">Ergebnis bei 2 % jährlicher Wertsteigerung:</p>
+      <dl>
+        <dt>Zuschüsse nötig (Cashflow-Deckung, 30 Jahre)</dt><dd>${euro(z.g2.zuschuesseGesamt)}</dd>
+        <dt>Endvermögen Wohnung</dt><dd>${euro(z.g2.immoEndvermoegen)}</dd>
+        <dt>Endvermögen ETF</dt><dd>${euro(z.g2.etfEndvermoegen)}</dd>
+        <hr>
+        <dt>Vorteil Wohnung</dt><dd class="${signClass(z.g2.vorteilImmo)}">${z.g2.vorteilImmo >= 0 ? "+" : ""}${euro(z.g2.vorteilImmo)}</dd>
+      </dl>
+      <div class="kipp-box"><b>Kipppunkt:</b> Ab ${pct(z.kipppunktWertsteigerung * 100, 1)} Wertsteigerung pro Jahr schlägt die Wohnung den ETF.</div>
+    `,
+  },
+  {
+    id: "e007", nav: "E007", title: "PV-Anlage: mit Speicher, ohne, oder gar nicht?",
+    subtitle: "Anlage und Speicher getrennt bewertet (Grenzbetrachtung).",
+    fields: [
+      { key: "kwp", label: "Anlagengröße", unit: "kWp", def: 10 },
+      { key: "pvInvest", label: "PV-Invest", unit: "€", def: 14000 },
+      { key: "speicherInvest", label: "Speicher-Invest", unit: "€", def: 5500 },
+      { key: "strompreis", label: "Strompreis", unit: "ct/kWh", def: 37, percent: true },
+      { key: "einspeisung", label: "Einspeisevergütung", unit: "ct/kWh", def: 7.8, percent: true },
+      { key: "verbrauch", label: "Jährlicher Stromverbrauch", unit: "kWh", def: 4500 },
+      { key: "evOhne", label: "Eigenverbrauchsquote ohne Speicher", unit: "%", def: 30, percent: true },
+      { key: "evMit", label: "Eigenverbrauchsquote mit Speicher", unit: "%", def: 60, percent: true },
+    ],
+    calc: e007,
+    render: (z) => `
+      <dl>
+        <dt>Anlage allein — Gewinn über 20 Jahre</dt><dd class="${signClass(z.ohneSpeicher.gewinn20j)}">${euro(z.ohneSpeicher.gewinn20j)} <span style="color:var(--dim); font-weight:400;">(${z.ohneSpeicher.amortisationJahre} J. Amort.)</span></dd>
+        <dt>Anlage + Speicher — Gewinn über 20 Jahre</dt><dd class="${signClass(z.mitSpeicher.gewinn20j)}">${euro(z.mitSpeicher.gewinn20j)} <span style="color:var(--dim); font-weight:400;">(${z.mitSpeicher.amortisationJahre} J. Amort.)</span></dd>
+      </dl>
+      <div class="kipp-box"><b>Kipppunkt-Speicherpreis:</b> ${euro(z.kipppunktSpeicherpreis)} — erst darunter trägt sich der Speicher innerhalb seiner Lebensdauer selbst.</div>
+    `,
+  },
+];
+
+/* ============================================================
+   Rendering / Wiring
+   ============================================================ */
+
+function fieldValue(ep, f) {
+  const el = document.getElementById(ep.id + "-" + f.key);
+  let v = parseFloat((el.value || "").replace(",", "."));
+  if (isNaN(v)) v = f.def;
+  return f.percent ? v / 100 : v;
+}
+
+function recalc(ep) {
+  const values = {};
+  for (const f of ep.fields) values[f.key] = fieldValue(ep, f);
+  const z = ep.calc(values);
+  document.getElementById(ep.id + "-result").innerHTML = ep.render(z);
+  document.getElementById(ep.id + "-raw").textContent = JSON.stringify(z, null, 2);
+}
+
+function buildEpisode(ep) {
+  const section = document.createElement("section");
+  section.className = "episode";
+  section.id = ep.id;
+
+  const fieldsHtml = ep.fields.map((f) => `
+    <div class="field">
+      <label for="${ep.id}-${f.key}">${f.label}</label>
+      <div class="inputwrap">
+        <input type="text" inputmode="decimal" id="${ep.id}-${f.key}" value="${f.def}">
+        <span class="unit">${f.unit}</span>
+      </div>
+    </div>
+  `).join("");
+
+  section.innerHTML = `
+    <h2>${ep.title}</h2>
+    <p class="subtitle">${ep.subtitle}</p>
+    <div class="grid">${fieldsHtml}</div>
+    <div class="actions">
+      <button class="primary" data-recalc="${ep.id}">Berechnen</button>
+      <button class="reset" data-reset="${ep.id}">Standardwerte</button>
+      <span class="live-note">Ergebnis aktualisiert sich automatisch beim Tippen.</span>
+    </div>
+    <div class="result" id="${ep.id}-result"></div>
+    <details class="raw">
+      <summary>Vollständige Rohdaten (JSON)</summary>
+      <pre id="${ep.id}-raw"></pre>
+    </details>
+  `;
+  document.getElementById("main").appendChild(section);
+
+  for (const f of ep.fields) {
+    document.getElementById(ep.id + "-" + f.key).addEventListener("input", () => recalc(ep));
+  }
+  section.querySelector("[data-recalc]").addEventListener("click", () => recalc(ep));
+  section.querySelector("[data-reset]").addEventListener("click", () => {
+    for (const f of ep.fields) document.getElementById(ep.id + "-" + f.key).value = f.def;
+    recalc(ep);
+  });
+}
+
+function showEpisode(id) {
+  for (const ep of EPISODES) {
+    document.getElementById(ep.id).classList.toggle("active", ep.id === id);
+    document.getElementById("navbtn-" + ep.id).classList.toggle("active", ep.id === id);
+  }
+  location.hash = id;
+}
+
+function init() {
+  const nav = document.getElementById("nav");
+  for (const ep of EPISODES) {
+    const btn = document.createElement("button");
+    btn.id = "navbtn-" + ep.id;
+    btn.textContent = ep.nav;
+    btn.title = ep.title;
+    btn.addEventListener("click", () => showEpisode(ep.id));
+    nav.appendChild(btn);
+    buildEpisode(ep);
+    recalc(ep);
+  }
+  const startId = EPISODES.some((e) => e.id === location.hash.slice(1)) ? location.hash.slice(1) : EPISODES[0].id;
+  showEpisode(startId);
+}
+init();
+</script>
+</body>
+</html>
