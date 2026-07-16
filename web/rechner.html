@@ -323,6 +323,49 @@
   .duel .bar-row.winner .bar-value { color: var(--gewinn); }
   .duel .bar-value { font-weight: 700; font-variant-numeric: tabular-nums; font-size: .92rem; white-space: nowrap; }
 
+  /* ── Video-Einbettung ───────────────────────────────────── */
+  .video-panel { margin-top: 1.6rem; }
+  .video-frame {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 9px; overflow: hidden;
+    border: 1px solid var(--linie);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(rgba(42,49,64,.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42,49,64,.35) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-facade {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    display: grid; place-items: center; cursor: pointer; border: 0; padding: 0;
+    background-color: var(--bg); background-position: center; background-size: cover; background-repeat: no-repeat;
+  }
+  .video-facade::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(14,17,22,.15), rgba(14,17,22,.55));
+    transition: background .2s;
+  }
+  .video-facade:hover::before { background: radial-gradient(ellipse at center, rgba(14,17,22,.05), rgba(14,17,22,.45)); }
+  .play-tri {
+    position: relative; width: 0; height: 0;
+    border-top: 25px solid transparent; border-bottom: 25px solid transparent;
+    border-left: 40px solid var(--amber);
+    filter: drop-shadow(0 0 14px rgba(250,183,34,.65));
+    transition: transform .18s;
+  }
+  .video-facade:hover .play-tri { transform: scale(1.12); }
+  .video-facade:focus-visible { outline: 3px solid var(--kipp); outline-offset: -3px; }
+  .video-soon {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .55rem;
+    text-align: center; padding: 1rem;
+  }
+  .video-soon svg { overflow: visible; margin-bottom: .4rem; }
+  .video-soon .soon-title { font-size: 1.02rem; font-weight: 600; }
+  .video-soon .soon-date { color: var(--kipp); font-size: .92rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .video-soon a { color: var(--dim); font-size: .82rem; text-decoration: none; border-bottom: 1px solid var(--linie); padding-bottom: 1px; margin-top: .5rem; }
+  .video-soon a:hover { color: var(--text); border-color: var(--dim); }
+
   /* ── Annahmen / Rohdaten / Quellen ──────────────────────── */
   details.more { border: 1px solid var(--linie); border-radius: var(--radius); background: var(--tafel); }
   details.more summary {
@@ -1084,6 +1127,29 @@ function releaseInfo(ep) {
   return `<a href="https://youtu.be/${ep.video.id}" target="_blank" rel="noopener"><span class="yt">▶</span> ${live ? "Zur Folge auf YouTube" : "Folge erscheint am " + dat}</a>`;
 }
 
+// Video-Panel: vor Release eine Marken-Karte mit Datum, ab Release eine
+// Click-to-Play-Fassade (YouTube lädt erst beim Klick — nocookie-Domain).
+function videoHtml(ep) {
+  const ab = new Date(ep.video.ab + "T08:00:00Z");
+  if (Date.now() >= ab.getTime()) {
+    return `<button class="video-facade" data-embed="${ep.video.id}" aria-label="Folge abspielen: ${ep.title}"
+      style="background-image:url('https://i.ytimg.com/vi/${ep.video.id}/maxresdefault.jpg'),url('https://i.ytimg.com/vi/${ep.video.id}/hqdefault.jpg')">
+      <span class="play-tri" aria-hidden="true"></span>
+    </button>`;
+  }
+  const tage = Math.ceil((ab.getTime() - Date.now()) / 86400000);
+  const dat = ab.toLocaleDateString("de-DE", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" });
+  return `<div class="video-soon">
+    <svg width="84" height="30" viewBox="0 0 84 30" aria-hidden="true">
+      <line x1="0" y1="12" x2="84" y2="12" stroke="#E8ECF1" stroke-width="2"/>
+      <path d="M31 13 L53 13 L42 28 Z" fill="#FAB722" filter="drop-shadow(0 0 6px rgba(250,183,34,.6))"/>
+    </svg>
+    <div class="soon-title">Diese Folge erscheint${tage >= 2 ? " in " + tage + " Tagen" : ""}</div>
+    <div class="soon-date">${dat} · 10:00 Uhr</div>
+    <a href="https://www.youtube.com/@erstrechnen" target="_blank" rel="noopener">Kanal abonnieren — dann verpasst du sie nicht</a>
+  </div>`;
+}
+
 function buildEpisode(ep) {
   const section = document.createElement("section");
   section.className = "episode";
@@ -1131,8 +1197,20 @@ function buildEpisode(ep) {
           </div>
         </details>
       </div>
+    </div>
+    <div class="panel video-panel">
+      <h4>Die Folge zum Rechner</h4>
+      <div class="video-frame">${videoHtml(ep)}</div>
     </div>`;
   document.getElementById("main").appendChild(section);
+
+  section.addEventListener("click", (e) => {
+    const facade = e.target.closest(".video-facade");
+    if (!facade) return;
+    facade.parentElement.innerHTML =
+      `<iframe src="https://www.youtube-nocookie.com/embed/${facade.dataset.embed}?autoplay=1&rel=0"
+        title="${ep.title}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  });
 
   let debounce;
   for (const f of ep.fields) {
