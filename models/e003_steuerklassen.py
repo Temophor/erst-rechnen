@@ -99,7 +99,7 @@ if __name__ == "__main__":
         print()
 
     z = zahlen()
-    Path(__file__).with_name("e002_zahlen.json").write_text(
+    Path(__file__).with_name("e003_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
 
     print(f"""
@@ -122,6 +122,6 @@ Ergebnis:
   -> Der eigentliche Hebel ist Elterngeld: waehlt Jan (der pausiert) Klasse 3
      statt 5, macht das ueber {BEZUGSMONATE} Monate {z['elterngeld_hebel_12_monate']:,.0f} EUR Unterschied.
 
-Vollstaendige Rohdaten (auch in e002_zahlen.json):
+Vollstaendige Rohdaten (auch in e003_zahlen.json):
 {json.dumps(z, indent=2, ensure_ascii=False)}
 """)

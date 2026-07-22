@@ -141,7 +141,7 @@ if __name__ == "__main__":
         print()
 
     z = zahlen()
-    Path(__file__).with_name("e003_zahlen.json").write_text(
+    Path(__file__).with_name("e022_zahlen.json").write_text(
         json.dumps(z, indent=2, ensure_ascii=False))
 
     s150 = z["szenarien"]["co2_150"]
@@ -167,6 +167,6 @@ Ergebnis (CO2-Pfad Richtung 150 EUR/t bis 2045):
   -> Ohne Foerderung kippt das Ergebnis: {z['ohne_foerderung_bei_co2_150']:+,.0f} EUR Vorteil WP.
   -> Kipppunkt-Foerdersatz (damit die WP gewinnt): {z['kipppunkt_foerdersatz_bei_co2_150']:.0%}
 
-Vollstaendige Rohdaten (auch in e003_zahlen.json):
+Vollstaendige Rohdaten (auch in e022_zahlen.json):
 {json.dumps(z, indent=2, ensure_ascii=False)}
 """)

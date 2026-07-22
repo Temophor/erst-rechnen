@@ -1,46 +1,43 @@
 {
   "annahmen": {
-    "wp_invest": 28000.0,
-    "gas_invest": 11000.0,
-    "foerdersatz": 0.55,
-    "jaz": 3.5,
-    "gas_arbeitspreis": 0.0931,
-    "wp_strompreis": 0.22,
-    "co2_heute": 60.0,
-    "diskont": 0.03,
-    "jahre": 20
+    "brutto_a": 58000.0,
+    "brutto_b": 32000.0,
+    "elterngeld_satz": 0.65,
+    "bezugsmonate": 12,
+    "sv_pauschal": 0.21,
+    "hinweis": "LSt-Naeherung §39b, ohne Soli/KiSt"
   },
-  "jahr_1": {
-    "gas_jahr_1": 1855.8,
-    "wp_jahr_1": 1174.86
+  "kombi_4_4": {
+    "netto_monat_gesamt": 4403.62,
+    "netto_a": 2695.95,
+    "netto_b": 1707.67,
+    "lohnsteuer_jahr": 18256.49,
+    "veranlagte_est": 17671.42,
+    "erstattung": 585.07
   },
-  "szenarien": {
-    "co2_60": {
-      "co2_ziel_2045": 60.0,
-      "foerdersatz": 0.55,
-      "zuschuss": 15400.0,
-      "barwert_wp": 31522.49,
-      "barwert_gas": 40568.74,
-      "vorteil_wp": 9046.25
-    },
-    "co2_150": {
-      "co2_ziel_2045": 150.0,
-      "foerdersatz": 0.55,
-      "zuschuss": 15400.0,
-      "barwert_wp": 31522.49,
-      "barwert_gas": 42741.8,
-      "vorteil_wp": 11219.31
-    },
-    "co2_250": {
-      "co2_ziel_2045": 250.0,
-      "foerdersatz": 0.55,
-      "zuschuss": 15400.0,
-      "barwert_wp": 31522.49,
-      "barwert_gas": 45156.32,
-      "vorteil_wp": 13633.83
-    }
+  "kombi_3_5": {
+    "netto_monat_gesamt": 4498.54,
+    "netto_a": 3162.18,
+    "netto_b": 1336.36,
+    "lohnsteuer_jahr": 17117.5,
+    "veranlagte_est": 17671.42,
+    "erstattung": -553.92
   },
-  "ohne_foerderung_bei_co2_150": -4180.69,
-  "kipppunkt_foerdersatz_bei_co2_konstant": 0.2269,
-  "kipppunkt_foerdersatz_bei_co2_150": 0.1493
+  "kombi_5_3": {
+    "netto_monat_gesamt": 3990.19,
+    "netto_a": 1989.07,
+    "netto_b": 2001.12,
+    "lohnsteuer_jahr": 23217.64,
+    "veranlagte_est": 17671.42,
+    "erstattung": 5546.22
+  },
+  "monats_plus_durch_3_5": 94.92,
+  "nachzahlung_bei_3_5": 553.92,
+  "jahressteuer_identisch": true,
+  "elterngeld_jan_je_klasse": {
+    "klasse_3": 1300.73,
+    "klasse_4": 1109.99,
+    "klasse_5": 868.63
+  },
+  "elterngeld_hebel_12_monate": 5185.2
 }

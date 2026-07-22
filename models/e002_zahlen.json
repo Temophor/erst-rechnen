@@ -1,43 +1,47 @@
 {
   "annahmen": {
-    "brutto_a": 58000.0,
-    "brutto_b": 32000.0,
-    "elterngeld_satz": 0.65,
-    "bezugsmonate": 12,
-    "sv_pauschal": 0.21,
-    "hinweis": "LSt-Naeherung §39b, ohne Soli/KiSt"
+    "kaltmiete_jahr": 14400.0,
+    "zins": 0.036,
+    "tilgung": 0.02,
+    "nk": 0.1,
+    "ek_quote": 0.2,
+    "steigerung": 0.02,
+    "etf": 0.065,
+    "jahre": 30
   },
-  "kombi_4_4": {
-    "netto_monat_gesamt": 4403.62,
-    "netto_a": 2695.95,
-    "netto_b": 1707.67,
-    "lohnsteuer_jahr": 18256.49,
-    "veranlagte_est": 17671.42,
-    "erstattung": 585.07
+  "duell_faktor_20": {
+    "faktor": 20.0,
+    "preis": 288000.0,
+    "kaeufer_endvermoegen": 521700.0,
+    "mieter_endvermoegen": 392300.0,
+    "vorteil_kaufen": 129300.0
   },
-  "kombi_3_5": {
-    "netto_monat_gesamt": 4498.54,
-    "netto_a": 3162.18,
-    "netto_b": 1336.36,
-    "lohnsteuer_jahr": 17117.5,
-    "veranlagte_est": 17671.42,
-    "erstattung": -553.92
+  "duell_faktor_25": {
+    "faktor": 25.0,
+    "preis": 360000.0,
+    "kaeufer_endvermoegen": 652100.0,
+    "mieter_endvermoegen": 814400.0,
+    "vorteil_kaufen": -162300.0
   },
-  "kombi_5_3": {
-    "netto_monat_gesamt": 3990.19,
-    "netto_a": 1989.07,
-    "netto_b": 2001.12,
-    "lohnsteuer_jahr": 23217.64,
-    "veranlagte_est": 17671.42,
-    "erstattung": 5546.22
+  "duell_faktor_30": {
+    "faktor": 30.0,
+    "preis": 432000.0,
+    "kaeufer_endvermoegen": 782500.0,
+    "mieter_endvermoegen": 1246500.0,
+    "vorteil_kaufen": -464000.0
   },
-  "monats_plus_durch_3_5": 94.92,
-  "nachzahlung_bei_3_5": 553.92,
-  "jahressteuer_identisch": true,
-  "elterngeld_jan_je_klasse": {
-    "klasse_3": 1300.73,
-    "klasse_4": 1109.99,
-    "klasse_5": 868.63
+  "duell_faktor_35": {
+    "faktor": 35.0,
+    "preis": 504000.0,
+    "kaeufer_endvermoegen": 912900.0,
+    "mieter_endvermoegen": 1680300.0,
+    "vorteil_kaufen": -767400.0
   },
-  "elterngeld_hebel_12_monate": 5185.2
+  "kipp_faktor_basis": 22.2,
+  "kipp_faktor_bei_1pz_wert": 19.9,
+  "kipp_faktor_bei_3pz_wert": 26.2,
+  "kipp_faktor_bei_zins_2pz": 27.3,
+  "kipp_faktor_bei_zins_5pz": 19.2,
+  "kipp_faktor_bei_etf_5pz": 27.6,
+  "kipp_faktor_bei_etf_8pz": 18.7
 }
